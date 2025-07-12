@@ -1,6 +1,7 @@
 from datetime import datetime
+from typing import Annotated
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel, Field
 from starlette.status import HTTP_404_NOT_FOUND
 
@@ -13,6 +14,12 @@ app = FastAPI()
 
 
 db_stores = []
+
+
+class Product(BaseModel):
+    name: str
+    description: str
+    price: int
 
 
 class StoreBase(BaseModel):
@@ -63,7 +70,44 @@ def update_store(store_id: int, store: CreateStore):
     except IndexError:
         raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Store not found.")
 
+
 # patch = atualiza somente os dados que foram passados
 @app.patch("/stores/{store_id}", response_model=Store)
-def patch_store(store_id: int, store: CreateStore):
-    pass
+def patch_store(store_id: int, store: PatchStore):
+    try:
+        db_store = db_stores[store_id]
+    except IndexError:
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Store not found.")
+
+    if store.name:
+        db_store.name = store.name
+    if store.location:
+        db_store.location = store.location
+
+    return db_store
+
+
+@app.delete("/stores/{store_id}")
+def delete_store(store_id: int):
+    try:
+        db_stores.pop(store_id)
+    except IndexError:
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Store not found.")
+
+    return {"message": "Store deleted successfully!"}
+
+
+def get_store_dep(store_id: int) -> DbStore:
+    try:
+        return db_stores[store_id]
+    except IndexError:
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Store not found.")
+
+
+@app.post("/stores/{store_id}/products")
+def create_product(
+        store: Annotated[DbStore, Depends(get_store_dep)],
+        product: Product
+):
+    # criar o produto no BD
+    return product
