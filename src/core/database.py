@@ -1,7 +1,9 @@
+from fastapi import Depends
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, session
+from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.sql.annotation import Annotated
 
-DATABASE_URL = ""
+DATABASE_URL = "postgresql://postgres:159753@localhost:5432/postgres"
 
 engine = create_engine(DATABASE_URL, echo=True)
 
@@ -13,3 +15,6 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+GetDBDep = Annotated[Session, Depends(get_db)]
