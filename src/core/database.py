@@ -1,9 +1,10 @@
+from typing import Annotated
+
 from fastapi import Depends
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy.sql.annotation import Annotated
 
-DATABASE_URL = "postgresql://postgres:159753@localhost:5432/postgres"
+DATABASE_URL = "postgresql://postgres:159753@localhost:5432/totem"
 
 engine = create_engine(DATABASE_URL, echo=True)
 

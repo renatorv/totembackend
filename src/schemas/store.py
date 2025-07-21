@@ -15,7 +15,7 @@ class Product(BaseModel):
 
 class StoreBase(BaseModel):
     name: str = Field(min_length=4, max_length=20)
-    location: str | None = None
+    owner: str
 
 class Store(StoreBase):
     id: int
@@ -28,4 +28,4 @@ class CreateStore(StoreBase):
 
 class PatchStore(BaseModel):
     name: str | None = Field(default=None, min_length=4, max_length=20)
-    location: str | None = None
+    owner: str | None = None
