@@ -1,4 +1,28 @@
-Aula 3 => 32 minutos
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+CONCEITO INICIAL DE MIGRATIONS:
+Aula 4 3 minutos
+
+pip install alembic
+
+cd src
+
+alembic init alembic
+
+alembic revision --autogenerate -m "Created location column on Store and removed enabled"
+
+alembic upgrade head
+
+PROBLEMA DE INTEGRIDADE: 27 MINUTOS
+
+RELAÇÕES ENTRE TABELAS: 40 MINUTOS
+
+pip freeze => requirements.txt
+pip install -r .\requirements.txt
+
+------------------------------------------------------------------------------------------------------------------------
 
 INJEÇÃO DE DEPENDÊNCIAS:
 Conceito no final da aula 2

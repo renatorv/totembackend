@@ -21,5 +21,14 @@ class Store(Base, TimeStampMixin):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column()
-    owner: Mapped[str] = mapped_column()
-    location: Mapped[str] = mapped_column()
+    owner_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    # "users.id" => nome da tabela . campo da tabela que se deseja fazer o vinculo
+    owner: Mapped["User"] = relationship() # busca os dados do usuário para devolver para a requisição - Aula 4 ~ 1 hora
+
+
+class User(Base, TimeStampMixin):
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    email: Mapped[str] = mapped_column()
+    name: Mapped[str] = mapped_column()
