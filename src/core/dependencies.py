@@ -24,5 +24,3 @@ def get_current_user(
         raise HTTPException(status_code=401, detail="Invalid token")
 
     return user
-
-Aula 5 1:12
