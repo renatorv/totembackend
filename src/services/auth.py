@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from src.core import models
 
 SECRET_KEY = "6w30wx4m768a68p#-r67s#gu+_0=x8q!6zx&$&b*yq+eoqd7yuht&80d96#$"
+REFRESH_SECRET_KEY = "6w30wx4m768a68p#-OIS*_+DL_0=x8q!6zx&$&b*yq+eoqd7yuht&80d96#$"
 ALGORITHM = "HS256"
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -47,9 +48,29 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-def verify_token(token: str):
+def create_refresh_token(data: dict, expires_delta: timedelta | None = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.now(timezone.utc) + expires_delta
+    else:
+        expire = datetime.now(timezone.utc) + timedelta(days=30)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, REFRESH_SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+
+def verify_access_token(token: str):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email = payload.get("sub")
+        return email
+    except InvalidTokenError:
+        return None
+
+
+def verify_refresh_token(token: str):
+    try:
+        payload = jwt.decode(token, REFRESH_SECRET_KEY, algorithms=[ALGORITHM])
         email = payload.get("sub")
         return email
     except InvalidTokenError:
