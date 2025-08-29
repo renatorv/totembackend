@@ -8,9 +8,10 @@ from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
 from src.core import models
+from src.core.config import config
 
-SECRET_KEY = "6w30wx4m768a68p#-r67s#gu+_0=x8q!6zx&$&b*yq+eoqd7yuht&80d96#$"
-REFRESH_SECRET_KEY = "6w30wx4m768a68p#-OIS*_+DL_0=x8q!6zx&$&b*yq+eoqd7yuht&80d96#$"
+SECRET_KEY = config.SECRET_KEY
+REFRESH_SECRET_KEY = config.REFRESH_SECRET_KEY
 ALGORITHM = "HS256"
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

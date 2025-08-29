@@ -3,7 +3,7 @@ from fastapi.params import Depends
 
 from src.core import models
 from src.core.database import GetDBDep
-from src.core.dependencies import get_current_user
+from src.core.dependencies import get_current_user, GetCurrentUserDep, GetOptionalUserDep
 from src.schemas.user import UserCreate, User
 from src.services.auth import get_password_hash
 
@@ -25,8 +25,8 @@ def create_user(user: UserCreate, db: GetDBDep):
     return user_internal
 
 
-@router.get("/me", response_model=User)
+@router.get("/me", response_model=User | None)
 def get_current_user(
-        current_user: models.User = Depends(get_current_user)
+        current_user: GetOptionalUserDep
 ):
     return current_user

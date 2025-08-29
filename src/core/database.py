@@ -4,7 +4,9 @@ from fastapi import Depends
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 
-DATABASE_URL = "postgresql://postgres:159753@localhost:5432/totem"
+from src.core.config import config
+
+DATABASE_URL = config.DATABASE_URL
 
 engine = create_engine(DATABASE_URL, echo=True)
 

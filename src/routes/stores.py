@@ -1,7 +1,7 @@
 
 from fastapi import HTTPException, APIRouter
 from fastapi.params import Depends
-from starlette.status import HTTP_404_NOT_FOUND
+from starlette.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 from src.core import models
 from src.core.database import GetDBDep
@@ -13,6 +13,10 @@ router = APIRouter(prefix="/admin/stores", tags=["Stores"])
 
 @router.post("", response_model=Store)
 def create_store(store: CreateStore, db: GetDBDep):
+    user = db.query(models.User).filter(models.User.id == store.owner_id).first()
+
+    if not user:
+        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail="User not found!")
 
     db_store = models.Store(**store.model_dump())
     db.add(db_store)
